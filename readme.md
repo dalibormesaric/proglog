@@ -1,5 +1,7 @@
 # Distributed Services with Go
 
+*by Travis Jeffery*
+
 ## Chapter 1. Let's Go
 
 ``` bash
@@ -18,14 +20,14 @@ curl -X GET localhost:8080 -d '{"offset":1}'
 curl -X GET localhost:8080 -d '{"offset":2}'
 ```
 
-## Chapter 2. Define Your Domain Types as Protocol Buffers
+## Chapter 2. Structure Data with Protocol Buffers
 
-https://grpc.io/docs/protoc-installation/
-
+We need to install `protoc` compiler that compiles protobuf `.proto` files. Read more [here](https://grpc.io/docs/protoc-installation/).
 ``` bash
 sudo apt install protobuf-compiler
 ```
 
+We also need language-specific runtime to compile protobuf files to `.go` files, in our case for Go.
 ``` bash
 go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 ```
@@ -37,7 +39,19 @@ export PATH=$PATH:$GOPATH/bin
 ```
 and do `. ~/.bashrc`
 
-To generate
+This is how we compile `.proto` files to `.go` files.
 ``` bash
 protoc api/v1/*.proto --go_out=. --go_opt=paths=source_relative --proto_path=.
 ```
+
+To execute `Makefile`, we need to install `make` program.
+``` bash
+sudo apt install make
+```
+
+## Chapter 3. Write a Log Package
+
+Logs, somethimes know as write-ahead logs, transaction logs or commit logs, are at the heart of many different distributed systems.
+
+Logs are use to improve data integrity.
+What is log? What is segment? What is index? What is store?...
