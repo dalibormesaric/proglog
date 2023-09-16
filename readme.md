@@ -55,3 +55,23 @@ Logs, somethimes know as write-ahead logs, transaction logs or commit logs, are 
 
 Logs are use to improve data integrity.
 What is log? What is segment? What is index? What is store?...
+
+## Chapter 4. Serve Requests with gRPC
+
+To run modified makefile
+
+https://grpc.io/docs/languages/go/quickstart/
+
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
+
+To resolve imports
+
+go get -u google.golang.org/grpc
+
+
+
+sudo apt install gcc
+
+
+export CGO_ENABLED=1 // if needed
+make test
