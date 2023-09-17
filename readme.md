@@ -75,3 +75,22 @@ sudo apt install gcc
 
 export CGO_ENABLED=1 // if needed
 make test
+
+# Chapter 5. Secure Your Services
+
+1. Encrypt data in-flight to protect against man-in-the-middle attacks
+2. Authenticate to identify clients
+3. Authorize to determine the permissions of the identified clients
+
+We are using mutual TLS authentication and list-based authorization to control whether a client is allowed to read from or write to (or both) to log.
+
+CFSSL is CloudFlare's toolkit for signing, verifying and bunding TLS certificates.
+``` bash
+go install github.com/cloudflare/cfssl/cmd/cfssl
+go install github.com/cloudflare/cfssl/cmd/cfssljson
+```
+
+Access Control List using Casbin
+``` bash
+go get github.com/casbin/casbin/v2
+```
