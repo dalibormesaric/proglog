@@ -2,7 +2,9 @@
 
 *by Travis Jeffery*
 
-## Chapter 1. Let's Go
+## Part I — Get Started
+
+### Chapter 1. Let's Go
 
 ``` bash
 curl -X POST localhost:8080 -d '{"record":{"value":"TGV0J3MgR28gIzEK"}}'
@@ -20,7 +22,7 @@ curl -X GET localhost:8080 -d '{"offset":1}'
 curl -X GET localhost:8080 -d '{"offset":2}'
 ```
 
-## Chapter 2. Structure Data with Protocol Buffers
+### Chapter 2. Structure Data with Protocol Buffers
 
 We need to install `protoc` compiler that compiles protobuf `.proto` files. Read more [here](https://grpc.io/docs/protoc-installation/).
 ``` bash
@@ -37,7 +39,7 @@ In case of `protoc-gen-go: program not found or is not executable` add to `~/.ba
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 ```
-and do `. ~/.bashrc`
+and do `source ~/.bashrc`
 
 This is how we compile `.proto` files to `.go` files.
 ``` bash
@@ -49,14 +51,16 @@ To execute `Makefile`, we need to install `make` program.
 sudo apt install make
 ```
 
-## Chapter 3. Write a Log Package
+### Chapter 3. Write a Log Package
 
 Logs, somethimes know as write-ahead logs, transaction logs or commit logs, are at the heart of many different distributed systems.
 
 Logs are use to improve data integrity.
 What is log? What is segment? What is index? What is store?...
 
-## Chapter 4. Serve Requests with gRPC
+## Part II — Network
+
+### Chapter 4. Serve Requests with gRPC
 
 To run modified makefile
 
@@ -76,7 +80,7 @@ sudo apt install gcc
 export CGO_ENABLED=1 // if needed
 make test
 
-# Chapter 5. Secure Your Services
+### Chapter 5. Secure Your Services
 
 1. Encrypt data in-flight to protect against man-in-the-middle attacks
 2. Authenticate to identify clients
@@ -94,3 +98,13 @@ Access Control List using Casbin
 ``` bash
 go get github.com/casbin/casbin/v2
 ```
+
+### Chapter 6. Observe Your Systems
+
+Observability? Three types of telemetry data - metrics, structured logs and traces.
+
+cd internal/server/
+go test -v -debug=true
+
+cat /tmp/metrics-*.log
+cat /tmp/traces-*.log
