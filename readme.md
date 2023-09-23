@@ -120,3 +120,17 @@ Membership
 Replicator
 
 Agent
+
+### Chapter 8. Coordinate Your Services with Consensus
+
+Consensus algorithms are tools used to agree on shared state even in the face of failures.
+
+Raft is used for leader election and replication. https://github.com/hashicorp/raft
+https://raft.github.io/
+1. Leader Election
+    - Term - tells other servers how authoritative and current this server is.
+2. Log Replication
+
+...
+
+In order to serve both gRPC and Raft connections on the same port we need Multiplexing: https://github.com/soheilhy/cmux
