@@ -108,3 +108,15 @@ go test -v -debug=true
 
 cat /tmp/metrics-*.log
 cat /tmp/traces-*.log
+
+## Part III — Distribute
+
+### Chapter 7. Server-to-Server Service Discovery
+
+https://www.serf.io/
+
+Membership
+
+Replicator
+
+Agent
