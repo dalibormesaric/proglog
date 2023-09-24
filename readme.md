@@ -134,3 +134,18 @@ https://raft.github.io/
 ...
 
 In order to serve both gRPC and Raft connections on the same port we need Multiplexing: https://github.com/soheilhy/cmux
+
+### Chapter 9. Discover Server and Load Balance from the Client
+
+Three Load-Balancing Strategies:
+  - Server proxying
+  - External load balancing
+  - Client-side balancing
+
+Resolver - fetches list of servers.
+
+Picker
+  - handles the RPC balancing logic based on servers discovered by resolver
+  - can route RPCs based on information about RPC, client and server
+  - returns ErrNoSubConnAvailable until resolver has discovered servers and updated picker's state
+    - this instructs gRPC to block client's RPCs
