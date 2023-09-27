@@ -2,6 +2,8 @@
 
 *by Travis Jeffery*
 
+This is written in September 2023 using Go 1.21.0 with Visual Studio Code on Ubuntu 22.04 running in Windows 10 WSL2.
+
 ## Part I — Get Started
 
 ### Chapter 1. Let's Go
@@ -94,7 +96,7 @@ go install github.com/cloudflare/cfssl/cmd/cfssl
 go install github.com/cloudflare/cfssl/cmd/cfssljson
 ```
 
-Access Control List using Casbin
+Access Control List (ACL) using Casbin
 ``` bash
 go get github.com/casbin/casbin/v2
 ```
@@ -149,3 +151,58 @@ Picker
   - can route RPCs based on information about RPC, client and server
   - returns ErrNoSubConnAvailable until resolver has discovered servers and updated picker's state
     - this instructs gRPC to block client's RPCs
+
+## Part IV — Deploy
+
+### Chapter 10. Deploy Applications with Kubernetes Locally
+
+`kubectl` is available thanks to [Docker Desktop for Windows](https://docs.docker.com/desktop/install/windows-install/)
+
+To build a `cli` application to serve as an entry point in `Docker`, we are using [Cobra](https://github.com/spf13/cobra).
+
+To enable container registry on `microk8s`
+```
+microk8s enable registry
+```
+
+Add `"insecure-registries": ["192.168.17.102:32000"]` to Docker Desktop > Settings > Docker Engine
+
+To push docker image to `microk8s` (replace microk8s.local with ip address)
+```
+docker tag github.com/dalibormesaric/proglog:0.0.1 microk8s.local:32000/github.com/dalibormesaric/proglog:0.0.1
+docker push microk8s.local:32000/github.com/dalibormesaric/proglog:0.0.1
+```
+
+To intall `helm`
+```
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+```
+
+
+```
+POD_NAME=$(kubectl get pod --selector=app.kubernetes.io/name=nginx --template '{{index .items 0 "metadata" "name" }}')
+SERVICE_IP=$(kubectl get svc --namespace default my-nginx --template "{{ .spec.clusterIP }}")
+kubectl exec $POD_NAME curl $SERVICE_IP
+```
+
+curl is not available as a command in the nginx image, so I just did the following instead of the command suggested in the book:
+```
+kubectl exec $POD_NAME -- cat index.html
+```
+
+Kubernetes probes:
+  - Liveness - if it fails, container restarts
+  - Readiness - if it fails, container stops receiving traffic
+  - Startup - only when this succeedes, kubernetes starts probing liveness and readiness
+
+helm template proglog deploy/proglog
+
+helm install proglog deploy/proglog
+
+kubectl describe statefulset proglog
+
+
+
+[ERROR] raft: failed to commit logs: error=EOF
+
+https://forum.devtalk.com/t/distributed-services-with-go-unable-to-pass-readiness-liveness-checks-page-210-215/22354

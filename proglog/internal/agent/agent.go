@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net"
+	"net/netip"
 	"sync"
 	"time"
 
@@ -85,8 +86,18 @@ func (a *Agent) setupLogger() error {
 }
 
 func (a *Agent) setupMux() error {
+	host, _, err := net.SplitHostPort(a.Config.BindAddr)
+	if err != nil {
+		return err
+	}
+	var addr string
+	ip, err := netip.ParseAddr(host)
+	if err == nil {
+		addr = ip.String()
+	}
 	rpcAddr := fmt.Sprintf(
-		":%d",
+		"%s:%d",
+		addr,
 		a.Config.RPCPort,
 	)
 	ln, err := net.Listen("tcp", rpcAddr)
@@ -112,9 +123,14 @@ func (a *Agent) setupLog() error {
 		a.Config.ServerTLSConfig,
 		a.Config.PeerTLSConfig,
 	)
+	rpcAddr, err := a.Config.RPCAddr()
+	if err != nil {
+		return nil
+	}
+	logConfig.Raft.BindAddr = rpcAddr
 	logConfig.Raft.LocalID = raft.ServerID(a.Config.NodeName)
 	logConfig.Raft.Bootstrap = a.Config.Bootstrap
-	var err error
+	logConfig.Raft.CommitTimeout = 1000 * time.Millisecond
 	a.log, err = log.NewDistributedLog(
 		a.Config.DataDir,
 		logConfig,
