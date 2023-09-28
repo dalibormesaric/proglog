@@ -206,3 +206,33 @@ kubectl describe statefulset proglog
 [ERROR] raft: failed to commit logs: error=EOF
 
 https://forum.devtalk.com/t/distributed-services-with-go-unable-to-pass-readiness-liveness-checks-page-210-215/22354
+
+### Chapter 11. Deploy Applications with Kubernetes to the Cloud
+
+Since I already decided to use microk8s cluster in the previous chapter, I'll skip the whole GKE setup and continue working against my cluster.
+
+Metacontroller is a Kubernetes add-on.
+https://metacontroller.github.io/metacontroller/
+
+  - DecoratorController - adds a loadbalancer service for each pod in our service's StatefulSet
+
+To define the Metacontroller Helm chart:
+``` bash
+cd deploy
+helm create metacontroller
+rm metacontroller/templates/**/*.yaml metacontroller/templates/*.yaml metacontroller/templates/NOTES.txt metacontroller/values.yaml
+curl https://raw.githubusercontent.com/metacontroller/metacontroller/v1.4.2/manifests/production/metacontroller.yaml > metacontroller/templates/metacontroller.yaml
+curl https://raw.githubusercontent.com/metacontroller/metacontroller/v1.4.2/manifests/production/metacontroller-rbac.yaml > metacontroller/templates/metacontroller-rbac.yaml
+curl https://raw.githubusercontent.com/metacontroller/metacontroller/v1.4.2/manifests/production/metacontroller-crds-v1.yaml > metacontroller/templates/metacontroller-crds-v1.yaml
+```
+
+To install the Metacontroller chart:
+``` bash
+kubectl create namespace metacontroller
+helm install metacontroller deploy/metacontroller
+```
+
+``` bash
+helm install proglog deploy/proglog --set service.lb=true
+kubectl get services -w -A
+```
