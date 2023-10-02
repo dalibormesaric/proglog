@@ -4,6 +4,10 @@
 
 This is written in September 2023 using Go 1.21.0 with Visual Studio Code on Ubuntu 22.04 running in Windows 10 WSL2.
 
+### Related blog post
+
+https://developerschallenges.com/2023/10/02/book-review-—-distributed-services-with-go-by-travis-jeffery/
+
 ## Part I — Get Started
 
 ### Chapter 1. Let's Go
